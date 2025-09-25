@@ -1,15 +1,9 @@
+# ======================
 # Python
+# ======================
 __pycache__/
 *.py[cod]
 *.so
-
-# R
-.RData
-.Rhistory
-.Rproj.user/*
-
-# Jupyter
-.ipynb_checkpoints
 
 # Virtual environments
 .env/
@@ -17,36 +11,86 @@ __pycache__/
 env/
 venv/
 
-# Data
-data/raw/*
-data/processed/*
-data/external/*
-data/New/*
-data/Old/*
-!data/.gitkeep
+# Logs
+*.log
 
-# Results
+# ======================
+# Jupyter
+# ======================
+.ipynb_checkpoints
+
+# ======================
+# R / RStudio
+# ======================
+.RData
+.Rhistory
+.Rproj.user/*
+
+# ======================
+# Data (large & sensitive)
+# Keep structure w/ .gitkeep
+# ======================
+data/raw/*
+!data/raw/.gitkeep
+
+data/processed/*
+!data/processed/.gitkeep
+
+data/external/*
+!data/external/.gitkeep
+
+data/old/*
+!data/old/.gitkeep
+
+data/new/*
+!data/new/.gitkeep
+
+# ======================
+# Results (large artifacts)
+# Keep structure w/ .gitkeep
+# ======================
+results/models/*
+!results/models/.gitkeep
+results/plots/*
+!results/plots/.gitkeep
 results/Old/Models/*
 results/New/Models/*
 
-# BERT
+# ======================
+# BERT & Embeddings
+# ======================
 BERT/*
 !BERT/.gitkeep
 
-# Embeddings
 embedding_cache/*
 !embedding_cache/.gitkeep
 
-# MLflow
+# ======================
+# MLflow (experiment tracking)
+# Keep structure w/ .gitkeep
+# ======================
 mlflow_tracking/*
 !mlflow_tracking/.gitkeep
 
-
-# Reports
+# ======================
+# Reports (generated)
+# Keep structure w/ .gitkeep
+# ======================
 reports/*.pdf
 reports/figures/*
-!reports/.gitkeep
+!reports/figures/.gitkeep
 
-# Logs
-*.log
+# ======================
+# App (static assets)
+# Keep structure w/ .gitkeep
+# ======================
+app/static/*
+!app/static/.gitkeep
+
+# ======================
+# OS / Editor
+# ======================
+.DS_Store
+Thumbs.db
+*.swp
 

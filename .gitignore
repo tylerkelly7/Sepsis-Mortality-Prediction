@@ -3,4 +3,7 @@
 .RData
 .Ruserdata
 BERT/*
-Data/*
+data/*
+embedding_cache
+results/New/*
+results/Old/*

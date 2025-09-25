@@ -1,0 +1,109 @@
+# Core Python libraries for ML & Data Science
+numpy
+pandas
+scikit-learn
+matplotlib
+seaborn
+plotly
+jupyter
+
+# Advanced ML
+xgboost
+lightgbm
+tensorflow
+torch
+torchvision
+torchaudio
+
+# NLP
+transformers
+nltk
+spacy
+
+# Model explainability
+shap
+lime
+
+# Utilities
+tqdm
+joblib
+setuptools
+
+# --------------------------------------------
+# 💡 Extra Recommendations (Uncomment if needed)
+# --------------------------------------------
+
+# Data & Big Data
+# sqlalchemy
+# dask
+# polars
+# pyarrow
+# vaex
+# modin[ray]
+# datatable
+# pyspark
+
+# Time Series
+# statsmodels
+# pmdarima
+# prophet
+# gluonts
+# darts
+
+# MLOps / Experiment Tracking
+# mlflow
+# wandb
+# tensorboard
+# hydra-core
+# prefect
+# dagster
+
+# Deep Learning
+# pytorch-lightning
+# accelerate
+# keras
+# jax
+# flax
+
+# NLP
+# gensim
+# sentence-transformers
+# sumy
+# textblob
+# fuzzywuzzy
+
+# Visualization
+# bokeh
+# altair
+# geopandas
+# folium
+
+# Security & Config
+# cryptography
+# python-decouple
+# pydantic
+
+# Testing & CI/CD
+# pre-commit
+# black
+# flake8
+# pytest
+# pytest-cov
+# tox
+# mypy
+# bandit
+
+# APIs & Web Apps
+# fastapi
+# flask
+# streamlit
+# dash
+
+# Extra ML/DL
+# catboost
+# optuna
+# ray[tune]
+
+# Explainability & Fairness
+# fairlearn
+# alibi

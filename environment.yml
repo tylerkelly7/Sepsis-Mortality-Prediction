@@ -1,0 +1,115 @@
+name: Masters-Thesis
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.11
+  - numpy
+  - pandas
+  - scikit-learn
+  - matplotlib
+  - seaborn
+  - jupyter
+  - xgboost
+  - lightgbm
+  - pytorch
+  - torchvision
+  - torchaudio
+  - transformers
+  - nltk
+  - spacy
+  - shap
+  - setuptools
+  - pip
+  - pip:
+      # Advanced ML
+      - tensorflow
+
+      # Model explainability
+      - lime
+
+      # Utilities
+      - tqdm
+      - joblib
+
+      # MLOps / Experiment Tracking
+      - mlflow
+
+      # Visualization
+      - plotly
+
+      # APIs & Web Apps
+      - flask
+
+      # --------------------------------------------
+      # 💡 Extra Recommendations (Uncomment if needed)
+      # --------------------------------------------
+
+      # Data & Big Data
+      # sqlalchemy
+      # dask
+      # polars
+      # pyarrow
+      # vaex
+      # modin[ray]
+      # datatable
+      # pyspark
+
+      # Time Series
+      # statsmodels
+      # pmdarima
+      # prophet
+      # gluonts
+      # darts
+
+      # MLOps / Experiment Tracking
+      # wandb
+      # tensorboard
+      # hydra-core
+      # prefect
+      # dagster
+
+      # Deep Learning
+      # pytorch-lightning
+      # accelerate
+      # keras
+      # jax
+      # flax
+
+      # NLP
+      # gensim
+      # sentence-transformers
+      # sumy
+      # textblob
+      # fuzzywuzzy
+
+      # Visualization
+      # bokeh
+      # altair
+      # geopandas
+      # folium
+
+      # Security & Config
+      # cryptography
+      # python-decouple
+      # pydantic
+
+      # Testing & CI/CD
+      # pre-commit
+      # black
+      # flake8
+      # pytest
+      # pytest-cov
+      # tox
+      # mypy
+      # bandit
+
+      # Extra ML/DL
+      # catboost
+      # optuna
+      # ray[tune]
+
+      # Explainability & Fairness
+      # fairlearn
+      # alibi
+

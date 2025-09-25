@@ -25,6 +25,10 @@ data/New/*
 data/Old/*
 !data/.gitkeep
 
+# Results
+results/Old/Models/*
+results/New/Models/*
+
 # BERT
 BERT/*
 !BERT/.gitkeep

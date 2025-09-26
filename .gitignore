@@ -27,6 +27,8 @@ venv/
 .Rproj.user/*
 *.Rproj
 
+notebooks/archive/rproj_bins/*
+
 # ======================
 # Data (large & sensitive)
 # Keep structure w/ .gitkeep

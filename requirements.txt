@@ -14,6 +14,7 @@ tensorflow
 torch
 torchvision
 torchaudio
+imbalanced-learn
 
 # NLP
 transformers
@@ -28,6 +29,8 @@ lime
 tqdm
 joblib
 setuptools
+ipykernel
+json5
 
 # --------------------------------------------
 # 💡 Extra Recommendations (Uncomment if needed)
@@ -66,7 +69,7 @@ setuptools
 # flax
 
 # NLP
-# gensim
+gensim
 # sentence-transformers
 # sumy
 # textblob
@@ -100,7 +103,7 @@ setuptools
 # dash
 
 # Extra ML/DL
-# catboost
+catboost
 # optuna
 # ray[tune]
 

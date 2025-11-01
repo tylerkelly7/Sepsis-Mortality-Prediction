@@ -12,6 +12,8 @@ dependencies:
   - jupyter
   - xgboost
   - lightgbm
+  - catboost
+  - imbalanced-learn
   - pytorch
   - torchvision
   - torchaudio
@@ -20,6 +22,8 @@ dependencies:
   - spacy
   - shap
   - setuptools
+  - ipykernel
+  - json5
   - pip
   - pip:
       # Advanced ML
@@ -77,7 +81,7 @@ dependencies:
       # flax
 
       # NLP
-      # gensim
+      - gensim
       # sentence-transformers
       # sumy
       # textblob

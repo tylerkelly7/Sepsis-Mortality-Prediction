@@ -228,9 +228,7 @@ Full project documentation is in [Full Documentation](docs/index.md)
 -->
 ## 📈 Future Work
 
-- “Resampling has been modularized in src/resampling.py.
-Currently only SMOTE is supported and the design allows extension to undersampling or hybrid methods (e.g., SMOTEENN, ADASYN). Future work could refactor training code (repeated_cv_with_mixed_search) to accept additional resampling strategies as parameters.”
-
+- Resampling has been modularized in src/resampling.py. Currently only SMOTE is supported and the design allows extension to undersampling or hybrid methods (e.g., SMOTEENN, ADASYN). Future work could refactor training code (repeated_cv_with_mixed_search) to accept additional resampling strategies as parameters.
 - BERT Extensions
 - Incorporating reinforcement and deep learning
 

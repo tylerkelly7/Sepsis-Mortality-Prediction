@@ -219,11 +219,13 @@ docker-compose up --build
 ---
 -->
 
+<!--
 ## 📚 Documentation
 
 Full project documentation is in [Full Documentation](docs/index.md)  
 [GitHub Pages](https://tylerkelly7.github.io/Masters-Thesis/)
 
+-->
 ## 📈 Future Work
 
 - “Resampling has been modularized in src/resampling.py.

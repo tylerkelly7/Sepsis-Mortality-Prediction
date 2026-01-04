@@ -18,12 +18,14 @@ The goal is to forecast sepsis mortality using **multi-modal EHR data** (structu
 The pipeline integrates:
 - Data extraction from MIMIC-IV (SQL)
 - Preprocessing and feature engineering
-- NLP embeddings (Word2Vec, BERT)
-- Model training with SMOTE to handle imbalance
-- Model evaluation and external validation
+- NLP embeddings (Word2Vec)
+- Model training with and without SMOTE to handle class imbalance
+- Model evaluation and statistical tests
 - Deployment via API (FastAPI/Flask demo)
 
-<!-->
+---
+
+<!--
 - **Goal:** [Short description of the prediction or classification task]
 - **Dataset:** [Name + link if public; instructions if restricted]
 - **Tech stack:** Python, scikit-learn, XGBoost, PyTorch, SHAP, Streamlit
@@ -32,9 +34,11 @@ The pipeline integrates:
   - Interpretability: [e.g., SHAP feature importances]
   - Deployment: [Optional: Streamlit demo / API]
 
-  -->
+
 
 ---
+
+-->
 
 ## 🛠️ Tech Stack
 
@@ -57,7 +61,7 @@ The pipeline integrates:
 - Results visualization and interpretation
 
 ---
-
+<!--
 ## 🏗️ Project Architecture
 
 ![Architecture](docs/architecture.png)
@@ -86,6 +90,7 @@ Feature importance and SHAP visualizations: see results/plots/
 ![SHAP summary plot](reports/figures/shap_summary.png)
 
 ---
+-->
 
 ## 🎓 Academic Context
 
@@ -132,7 +137,7 @@ conda activate Masters-Thesis
 ```
 
 ---
-
+<!--
 ## 🔄 ML Pipeline
 
 ### Run the entire ML workflow:
@@ -143,6 +148,7 @@ make features
 make train
 make eval
 ```
+-->
 
 ### Pipeline steps:
 
@@ -156,10 +162,10 @@ make eval
 
 5. Evaluate models (AUROC, calibration, SHAP/feature importance)
 
-6. Save model artifacts
+6. Save model artifacts with MLflow
 
 ---
-
+<!--
 ## 🔬 API for Predictions
 
 ```bash
@@ -177,6 +183,7 @@ make pipeline_test
 ```
 
 ---
+-->
 
 ## 📓 Notebooks
 Modular Jupyter notebooks (01–07) implement the full pipeline, with legacy work preserved in `archive/`.
@@ -186,8 +193,9 @@ Modular Jupyter notebooks (01–07) implement the full pipeline, with legacy wor
 ## ✅ Unit Tests
 Unit tests (PyTest) cover data preprocessing, feature engineering, and model training modules.
 
+- Currently in development
 ---
-
+<!--
 ## 🐳 Containerization
 
 ### Build Docker image:
@@ -209,21 +217,20 @@ docker-compose up --build
 ```
 
 ---
+-->
 
-
+<!--
 ## 📚 Documentation
 
 Full project documentation is in [Full Documentation](docs/index.md)  
 [GitHub Pages](https://tylerkelly7.github.io/Masters-Thesis/)
 
+-->
 ## 📈 Future Work
 
-- “Resampling has been modularized in src/resampling.py.
-Currently only SMOTE is supported and the design allows extension to undersampling or hybrid methods (e.g., SMOTEENN, ADASYN). Future work could refactor training code (repeated_cv_with_mixed_search) to accept additional resampling strategies as parameters.”
-
-- Next experiments
-- Model improvements
-- Deployment plans
+- Resampling has been modularized in src/resampling.py. Currently only SMOTE is supported and the design allows extension to undersampling or hybrid methods (e.g., SMOTEENN, ADASYN). Future work could refactor training code (repeated_cv_with_mixed_search) to accept additional resampling strategies as parameters.
+- BERT Extensions
+- Incorporating reinforcement and deep learning
 
 ---
 

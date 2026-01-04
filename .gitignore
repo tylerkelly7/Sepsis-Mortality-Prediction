@@ -184,4 +184,5 @@ Thumbs.db
 # ======================
 notes/*
 docs/**/*.pdf
+!docs/Tyler\ Kelly\ Thesis.pdf
 !docs/.gitkeep

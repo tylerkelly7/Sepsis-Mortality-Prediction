@@ -276,3 +276,114 @@ def compare_aurocs(
             raise ValueError("method must be 'delong' or 'bootstrap'.")
 
     return pd.DataFrame(rows)
+
+# =========================================================
+# 10. F2 + Sensitivity Analysis Utilities (SMOTE vs Non-SMOTE)
+# =========================================================
+
+import numpy as np
+from sklearn.metrics import fbeta_score, precision_recall_curve
+from statsmodels.stats.contingency_tables import mcnemar
+
+# ---------------------------------------------------------
+# F2 at a fixed threshold
+# ---------------------------------------------------------
+def f2_at_threshold(y_true, y_prob, thr=0.5, beta=2.0):
+    """
+    Compute Fβ score from predicted probabilities at a fixed threshold.
+    """
+    y_pred = (y_prob >= thr).astype(int)
+    return fbeta_score(y_true, y_pred, beta=beta)
+
+
+# ---------------------------------------------------------
+# Paired bootstrap ΔF2 (SMOTE − Non-SMOTE)
+# ---------------------------------------------------------
+def bootstrap_delta_f2(y_true, p_non, p_sm, n_boot=2000, thr=0.5, beta=2.0, random_state=None):
+    """
+    Paired stratified bootstrap to estimate ΔF2 and CI.
+    Returns mean delta, 95% CI.
+    """
+    rng = np.random.default_rng(random_state)
+    n = len(y_true)
+    deltas = []
+
+    for _ in range(n_boot):
+        idx = rng.integers(0, n, size=n)
+        y_b  = y_true[idx]
+        pn_b = p_non[idx]
+        ps_b = p_sm[idx]
+
+        f2_n = f2_at_threshold(y_b, pn_b, thr=thr, beta=beta)
+        f2_s = f2_at_threshold(y_b, ps_b, thr=thr, beta=beta)
+        deltas.append(f2_s - f2_n)
+
+    deltas = np.asarray(deltas)
+    return {
+        "delta_f2": float(np.mean(deltas)),
+        "ci_low":   float(np.quantile(deltas, 0.025)),
+        "ci_high":  float(np.quantile(deltas, 0.975)),
+    }
+
+
+# ---------------------------------------------------------
+# McNemar test for difference in recall (positives only)
+# ---------------------------------------------------------
+def mcnemar_recall_test(y_true, p_non, p_sm, thr=0.5):
+    """
+    McNemar χ² test restricted to positive (death) cases.
+    Tests whether SMOTE improves recall at threshold=0.5.
+    """
+    y_pos = (y_true == 1)
+    if y_pos.sum() == 0:
+        return np.nan, np.nan
+
+    # Predictions at threshold
+    pred_non = (p_non[y_pos] >= thr).astype(int)
+    pred_sm  = (p_sm[y_pos]  >= thr).astype(int)
+
+    non_cor = (pred_non == 1)
+    sm_cor  = (pred_sm  == 1)
+
+    # Contingency table:
+    #      Non-SM correct?
+    #          yes   no
+    # SM yes   n11   n01
+    # SM no    n10   n00
+    n11 = int(np.sum(non_cor & sm_cor))
+    n01 = int(np.sum(~non_cor & sm_cor))
+    n10 = int(np.sum(non_cor & ~sm_cor))
+    n00 = int(np.sum(~non_cor & ~sm_cor))
+
+    table = [[n11, n01], [n10, n00]]
+    res = mcnemar(table, exact=False, correction=True)
+    return float(res.statistic), float(res.pvalue)
+
+
+# ---------------------------------------------------------
+# Build F2 curve from PR curve
+# ---------------------------------------------------------
+def f2_from_pr(precision, recall, beta=2.0):
+    """
+    Convert a PR curve into Fβ values at every point.
+    """
+    precision = np.asarray(precision)
+    recall = np.asarray(recall)
+    num = (1 + beta**2) * precision * recall
+    den = (beta**2) * precision + recall
+    f2 = np.zeros_like(precision)
+    mask = den > 0
+    f2[mask] = num[mask] / den[mask]
+    return f2
+
+
+# ---------------------------------------------------------
+# Produce F2 curve for a single classifier
+# ---------------------------------------------------------
+def f2_curve(y_true, y_prob, beta=2.0):
+    """
+    Returns precision, recall, and F2 curve arrays.
+    """
+    precision, recall, _ = precision_recall_curve(y_true, y_prob)
+    f2 = f2_from_pr(precision, recall, beta=beta)
+    return precision, recall, f2

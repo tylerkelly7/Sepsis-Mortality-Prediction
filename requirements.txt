@@ -31,6 +31,8 @@ joblib
 setuptools
 ipykernel
 json5
+r-tableone
+openai>=1.0.0
 
 # --------------------------------------------
 # 💡 Extra Recommendations (Uncomment if needed)
@@ -54,7 +56,7 @@ statsmodels
 # darts
 
 # MLOps / Experiment Tracking
-# mlflow
+mlflow
 # wandb
 # tensorboard
 # hydra-core

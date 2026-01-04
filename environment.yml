@@ -24,8 +24,14 @@ dependencies:
   - setuptools
   - ipykernel
   - json5
+  - r-tableone
   - pip
   - pip:
+
+      - openai>=1.0.0 # OpenAI API client
+
+      # --------------------------------------------
+
       # Advanced ML
       - tensorflow
 
@@ -116,4 +122,21 @@ dependencies:
       # Explainability & Fairness
       # fairlearn
       # alibi
+
+
+      # - datasets # Hugging Face Datasets
+      # - evaluate # Hugging Face Evaluate
+      # - sentencepiece # Tokenizer for various models
+      # - accelerate # For optimized model training
+      # - bitsandbytes # 8-bit optimizers and quantization
+      # - peft # Parameter-Efficient Fine-Tuning
+      # - langchain # Framework for developing applications with LLMs
+      # - chromadb # Vector database for embeddings
+      # - faiss-cpu # Efficient similarity search and clustering of dense vectors
+      # - gradio # Web-based UI for machine learning models
+      # - wandb # Weights & Biases for experiment tracking
+      # - optuna # Hyperparameter optimization framework
+      # - fastapi # Modern, fast web framework for building APIs
+      # - uvicorn # ASGI server for FastAPI
+      # - python-multipart # For handling file uploads in FastAPI
 

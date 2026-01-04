@@ -324,10 +324,10 @@ def merge_embeddings_with_features(
     X_test_merged = X_test_features.merge(X_test_embed, on=id_col, how="left")
 
     X_train_merged.to_csv(
-        os.path.join(out_dir, f"data_{prefix}_merged_xtrain.csv"), index=False
+        os.path.join(out_dir, f"data_{prefix}_xtrain.csv"), index=False
     )
     X_test_merged.to_csv(
-        os.path.join(out_dir, f"data_{prefix}_merged_xtest.csv"), index=False
+        os.path.join(out_dir, f"data_{prefix}_xtest.csv"), index=False
     )
 
     print(f"✅ Merged {prefix} train/test sets saved under {out_dir}")
@@ -718,3 +718,75 @@ def random_search_word2vec(
         results.append({"params": config, "model_path": model_path})
 
     return results
+
+# ==================================================
+# 7. LLM Standard Scaling
+# ==================================================
+
+def scale_llm_features(
+    X_train: pd.DataFrame,
+    X_test: pd.DataFrame,
+    model: str,
+    prefix: str,
+    id_col: str = "subject_id",
+    feature_prefix: str | None = None,
+    save_train_name: str = "scaled_llm_train.csv",
+    save_test_name: str = "scaled_llm_test.csv",
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Fit a StandardScaler on training LLM features and apply to both train/test.
+
+    Saving convention:
+        base = resolve_path(DEFAULT_CACHE_DIR) / cfg.model / SCHEMA_VERSION
+
+    Args:
+        X_train, X_test: DataFrames that include `id_col` and LLM feature columns.
+        model: LLM model name (e.g., "gpt-4o-mini").
+        prefix: feature prefix used in columns (e.g., "llmB_" or "llmA_").
+        id_col: identifier column (default "subject_id").
+        feature_prefix: optional override for column selection; if None, uses `prefix`.
+        save_train_name/save_test_name: output filenames.
+
+    Returns:
+        (X_train_scaled, X_test_scaled)
+    """
+    from src.llm_structured_features import SCHEMA_VERSION, DEFAULT_CACHE_DIR
+
+    # If feature_prefix is provided, use that for matching columns; else use prefix
+    col_prefix = feature_prefix or prefix
+
+    if id_col not in X_train.columns or id_col not in X_test.columns:
+        raise ValueError(f"Missing id_col='{id_col}' in train/test.")
+
+    # Select LLM feature columns by prefix
+    llm_cols = [c for c in X_train.columns if c.startswith(col_prefix) and c != id_col]
+    if not llm_cols:
+        raise ValueError(
+            f"No LLM feature columns found starting with '{col_prefix}'. "
+            f"Example columns: {X_train.columns.tolist()[:20]}"
+        )
+
+    # Defensive: ensure test has same columns
+    missing_in_test = [c for c in llm_cols if c not in X_test.columns]
+    if missing_in_test:
+        raise ValueError(f"Test set missing LLM columns: {missing_in_test[:10]} ...")
+
+    scaler = StandardScaler()
+    X_train_scaled = X_train.copy()
+    X_test_scaled = X_test.copy()
+
+    X_train_scaled[llm_cols] = scaler.fit_transform(X_train[llm_cols])
+    X_test_scaled[llm_cols] = scaler.transform(X_test[llm_cols])
+
+    # Save scaled outputs to the requested base path
+    base = resolve_path(DEFAULT_CACHE_DIR) / f"{model}" / f"{SCHEMA_VERSION}"
+    base.mkdir(parents=True, exist_ok=True)
+
+    X_train_scaled.to_csv(base / save_train_name, index=False)
+    X_test_scaled.to_csv(base / save_test_name, index=False)
+
+    print(f"✅ Scaled LLM features saved to: {base}")
+    print(f"   - {save_train_name}")
+    print(f"   - {save_test_name}")
+
+    return X_train_scaled, X_test_scaled

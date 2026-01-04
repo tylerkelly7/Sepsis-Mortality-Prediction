@@ -25,6 +25,7 @@ import matplotlib.pyplot as plt
 from gensim.models import Word2Vec
 from sklearn.metrics.pairwise import cosine_similarity
 from src.utils import resolve_path
+from matplotlib.patches import Patch
 
 
 # =====================================================
@@ -244,21 +245,119 @@ def select_and_save_best(sentences, results_df, note_type):
 # =====================================================
 
 
-def plot_intrinsic_results(df_results, note_type):
-    """Plot mean cosine similarity for each configuration."""
-    plt.figure(figsize=(8, 4))
-    plt.bar(range(len(df_results)), df_results["mean_cosine_sim"])
-    plt.xticks(range(len(df_results)), range(1, len(df_results) + 1))
-    plt.xlabel("Config ID")
-    plt.ylabel("Mean Cosine Similarity")
-    plt.title(f"Word2Vec Intrinsic Evaluation ({note_type})")
-    plt.tight_layout()
+def plot_intrinsic_results(note_type: str):
+    """
+    Plot intrinsic Word2Vec evaluation results for a given note type.
+    - Two discrete colors for vector_size (e.g., 100 vs 200)
+    - Two brightness/shade levels for window (e.g., 5 vs 10)
+    - sg = 0 (CBOW) and sg = 1 (Skip-gram) separated visually
+    Saves figure to reports/figures/w2v_intrinsic_{note_type}.png
+    """
+    # ------------------------------------------------------------
+    # Load results
+    # ------------------------------------------------------------
+    results_path = resolve_path(f"results/embeddings/{note_type}/w2v_search_results.csv")
+    if not os.path.exists(results_path):
+        raise FileNotFoundError(f"Results file not found at {results_path}")
 
+    df_results = pd.read_csv(results_path)
+    required_cols = {"sg", "mean_cosine_sim", "vector_size", "window"}
+    if not required_cols.issubset(df_results.columns):
+        raise ValueError(f"Expected columns {required_cols} in {results_path}")
+
+    # ------------------------------------------------------------
+    # Sort and group
+    # ------------------------------------------------------------
+    df_results = df_results.sort_values(["sg", "vector_size", "window"]).reset_index(drop=True)
+    df_cbow = df_results[df_results["sg"] == 0].copy()
+    df_skip = df_results[df_results["sg"] == 1].copy()
+
+    # ------------------------------------------------------------
+    # Custom X-axis labels: show (min_count, negative)
+    # ------------------------------------------------------------
+    if {"min_count", "negative"}.issubset(df_results.columns):
+        df_results["config_label"] = [
+            f"({int(mc)}, {int(neg)})" for mc, neg in zip(df_results["min_count"], df_results["negative"])
+        ]
+        x_labels = df_results["config_label"].tolist()
+    else:
+        x_labels = list(range(1, len(df_results) + 1))
+
+
+    # ------------------------------------------------------------
+    # Discrete color/shade assignment
+    # ------------------------------------------------------------
+    # Two colors for vector_size (purple, orange)
+    vec_palette = {
+        100: np.array([106/255, 81/255, 163/255]),   # purple
+        200: np.array([230/255, 85/255, 13/255])     # orange
+    }
+    # Shades for window (5 = darker, 10 = lighter)
+    window_shades = {5: 0.6, 10: 1.0}
+
+    colors = []
+    for _, row in df_results.iterrows():
+        base_rgb = vec_palette.get(row["vector_size"], np.array([0.5, 0.5, 0.5]))
+        brightness = window_shades.get(row["window"], 1.0)
+        color = np.clip(base_rgb * brightness, 0, 1)
+        colors.append(tuple(np.append(color, 1.0)))  # alpha = 1
+
+    # ------------------------------------------------------------
+    # Plot
+    # ------------------------------------------------------------
+    fig, ax = plt.subplots(figsize=(12, 4))
+    ax.bar(range(len(df_results)), df_results["mean_cosine_sim"], color=colors, edgecolor="black")
+
+    ax.set_xlabel("Configuration ID")
+    ax.set_ylabel("Mean Cosine Similarity")
+    ax.set_title(f"Word2Vec Intrinsic Evaluation ({note_type})")
+
+    ax.set_xticks(range(len(df_results)))
+    ax.set_xticklabels(x_labels, rotation=90, fontsize=7)
+    ax.set_xlabel("(min_count, negative)")
+
+
+    # Divider + sg labels
+    cbow_count = len(df_cbow)
+    ax.axvline(x=cbow_count - 0.5, color="gray", linestyle="--", alpha=0.6)
+    ax.text(cbow_count / 2, ax.get_ylim()[1] * 0.95, "sg = 0 (CBOW)", ha="center", fontsize=10)
+    ax.text(cbow_count + (len(df_skip) / 2), ax.get_ylim()[1] * 0.95,
+            "sg = 1 (Skip-gram)", ha="center", fontsize=10)
+
+    # ------------------------------------------------------------
+    # Legend for discrete vector_size × window combinations
+    # ------------------------------------------------------------
+    legend_elems = []
+    for vsize, base_rgb in vec_palette.items():
+        for win, shade in window_shades.items():
+            face = tuple(np.append(np.clip(base_rgb * shade, 0, 1), 1))
+            legend_elems.append(
+                Patch(facecolor=face, edgecolor='black', label=f"Vector {vsize}, Window {win}")
+            )
+
+    ax.legend(
+        handles=legend_elems,
+        loc='upper left',
+        bbox_to_anchor=(0.02, 0.68), 
+        frameon=False,
+        fontsize=9,
+        ncol=2,
+        columnspacing=1.0,
+        handletextpad=0.4
+    )
+
+    fig.tight_layout()
+
+    # ------------------------------------------------------------
+    # Save and show
+    # ------------------------------------------------------------
     save_path = resolve_path(f"reports/figures/w2v_intrinsic_{note_type}.png")
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
-    plt.savefig(save_path)
-    plt.close()
+    fig.savefig(save_path, dpi=300)
+    plt.show()
+    plt.close(fig)
 
+    print(f"✅ Saved intrinsic evaluation plot to {save_path}")
 
 # =====================================================
 # 7. Full Orchestrator

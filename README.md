@@ -4,24 +4,33 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Build](https://img.shields.io/badge/build-scaffolded-yellow)
 
-<!--
-## Motivation
-Explain why this project matters and its real-world impact.
 
-## Problem Statement
-Clearly define the problem or task being solved.
--->
+## Motivation
+A reproducible machine learning pipeline for predicting ICU sepsis mortality using structured EHR data and clinical text from MIMIC-IV, developed as a Master’s thesis in Biostatistics.
+
+
+## Objective
+To develop, evaluate, and statistically compare machine learning models for predicting in-hospital mortality among ICU patients with sepsis using multi-modal electronic health record (EHR) data.
+
+
+---
 
 ## 📌 Overview
-This repository contains my Master's Thesis project in Biostatistics at the University of Pittsburgh.  
-The goal is to forecast sepsis mortality using **multi-modal EHR data** (structured clinical variables + clinical notes).  
+This repository contains my Master’s Thesis project in Biostatistics at the University of Pittsburgh.
+
+This work treats sepsis mortality prediction as a clinical risk stratification problem under class imbalance.
+Model selection and hyperparameter tuning are performed on non-resampled training data, followed by retraining on SMOTE-balanced data for final evaluation.
+This approach aligns with best practices for imbalanced clinical prediction tasks and is documented for reproducibility.
+
 The pipeline integrates:
-- Data extraction from MIMIC-IV (SQL)
-- Preprocessing and feature engineering
-- NLP embeddings (Word2Vec)
-- Model training with and without SMOTE to handle class imbalance
-- Model evaluation and statistical tests
-- Deployment via API (FastAPI/Flask demo)
+- Cohort construction and feature extraction from MIMIC-IV (SQL)
+- Structured clinical feature engineering
+- Clinical text representation using NLP embeddings (Word2Vec; experimental LLM extensions explored separately)
+- Supervised model training with and without SMOTE to address class imbalance
+- Rigorous evaluation using AUROC, calibration, and statistical testing
+- Reproducible experiment tracking and artifact logging (MLflow)
+- A lightweight API demonstration for inference (in progress)
+
 
 ---
 
@@ -43,22 +52,26 @@ The pipeline integrates:
 ## 🛠️ Tech Stack
 
 - **Languages**: Python (3.11), R, SQL
-- **Libraries**: PyTorch, TensorFlow, scikit-learn, XGBoost, LightGBM, pandas, numpy,  matplotlib, seaborn, plotly
-- **NLP**: Word2Vec, BERT (HuggingFace Transformers)
-- **API**: Flask
+- **Libraries**: scikit-learn, XGBoost, LightGBM, pandas, numpy,  matplotlib, seaborn, plotly
+- **NLP**: Word2Vec (gensim; main thesis NLP technique); experimental LLM-based feature extraction extensions using gpt-4.1-mini and gpt-4o-mini
 - **Experiment Tracking**: MLflow
-- **Containerization**: Docker, Docker Compose
+- **API**: Flask (FastAPI planned)
+- **Containerization**: Docker, Docker Compose (planned)
 - **CI/CD**: GitHub Actions
 - **Testing**: PyTest
 
 ---
 
 ## Methodology
-- Data preprocessing
-- Feature engineering
-- Model selection and training
-- Model evaluation (AUROC, calibration, SHAP feature importance)
-- Results visualization and interpretation
+
+1. Cohort definition and outcome labeling using MIMIC-IV
+2. Structured data preprocessing and normalization
+3. Clinical text embedding using Word2Vec as the primary thesis representation
+4. Model selection and hyperparameter tuning using repeated stratified cross-validation on non-resampled training data
+5. Retraining of selected models on SMOTE-balanced training data
+6. Performance evaluation using AUROC, calibration curves, and SHAP
+7. Artifact persistence and experiment tracking with MLflow
+
 
 ---
 <!--
@@ -94,28 +107,46 @@ Feature importance and SHAP visualizations: see results/plots/
 
 ## 🎓 Academic Context
 
+### 📄 Full Thesis Document
+
+The complete, submitted Master’s thesis is available here:
+
+📘 **[Tyler Kelly — Master’s Thesis (PDF)](docs/Tyler%20Kelly%20Thesis.pdf)**
+
 This repository supports my Master’s Thesis defense by ensuring reproducibility and transparency:
 - Committee members can follow the modular notebooks.
 - Recruiters can inspect the scaffold and MLOps integrations.
 
+This repository is also intended for academic and educational purposes.
+Results should not be interpreted as clinical decision support without external validation.
+
+
 ## 📂 Repo Structure
 ```bash
 Masters-Thesis/
-├── data/               # raw, processed, external datasets (ignored in Git)
+├── data/               # raw, processed, external datasets (gitignored)
 ├── notebooks/          # modular workflow notebooks
 │   ├── 01_data_exploration.ipynb
 │   ├── 02_data_preprocessing.ipynb
 │   ├── 03_feature_engineering.ipynb
 │   ├── 04_model_training.ipynb
-│   ├── 05_model_evaluation.ipynb
-│   ├── 06_external_validation.ipynb
-│   ├── 07_api_demo.ipynb
+│   ├── 05_baseline_model_evaluation.ipynb
+│   ├── 06_visualization.ipynb
+│   ├── 07_w2v_hyperparam_search.ipynb
+│   ├── 08_w2v_optimized_training.ipynb
+│   ├── 09_final_model_evaluation.ipynb
+│   ├── 10_statistical_testing.ipynb
+│   ├── 11_external_validation.ipynb  # currently unused
+│   ├── 12_reporting.ipynb
+│   ├── 13_Cosine_Similarity.ipynb
+│   ├── 14_LLM_Extension.ipynb         # exploratory work, not part of core thesis results
+│   ├── 15_api_demo.ipynb             # in development
 │   └── archive/        # legacy notebooks + Rmd
-├── src/                # reusable pipeline code
+├── src/                # reusable, testable pipeline modules (data, features, models, evaluation)
 ├── scripts/            # CLI and automation scripts
 ├── sql/                # SQL queries for MIMIC-IV extraction
-├── results/            # trained models and plots (ignored in Git)
-├── mlflow_tracking/    # MLflow experiment logs (ignored in Git)
+├── results/            # trained models and plots (gitignored)
+├── mlflow_tracking/    # MLflow experiment logs (gitignored)
 ├── configs/            # experiment configs
 ├── tests/              # unit tests
 ├── Makefile            # workflow automation
@@ -127,6 +158,8 @@ Masters-Thesis/
 ---
 
 ## ⚙️ Setup Instructions
+
+> Note: Raw MIMIC-IV data are not included due to licensing restrictions. SQL scripts are provided for reproducible extraction.
 
 ### Setup
 ```bash
@@ -186,14 +219,15 @@ make pipeline_test
 -->
 
 ## 📓 Notebooks
-Modular Jupyter notebooks (01–07) implement the full pipeline, with legacy work preserved in `archive/`.
+Modular Jupyter notebooks (01–15) implement the full pipeline, with legacy work preserved in `archive/`.
 
 ---
 
 ## ✅ Unit Tests
-Unit tests (PyTest) cover data preprocessing, feature engineering, and model training modules.
+Core pipeline logic has been refactored into `src/` to support testability and reuse.
+PyTest-based unit tests validate data preprocessing, feature engineering, and model training logic.
+Coverage is being expanded as part of ongoing pipeline hardening.
 
-- Currently in development
 ---
 <!--
 ## 🐳 Containerization
@@ -228,9 +262,10 @@ Full project documentation is in [Full Documentation](docs/index.md)
 -->
 ## 📈 Future Work
 
-- Resampling has been modularized in src/resampling.py. Currently only SMOTE is supported and the design allows extension to undersampling or hybrid methods (e.g., SMOTEENN, ADASYN). Future work could refactor training code (repeated_cv_with_mixed_search) to accept additional resampling strategies as parameters.
-- BERT Extensions
-- Incorporating reinforcement and deep learning
+- Extend resampling support beyond SMOTE (e.g., SMOTEENN, ADASYN) via the modular resampling interface
+- Expand NLP representations using contextual embeddings (BERT variants)
+- Investigate deep learning approaches for longitudinal risk modeling using time-aware representations
+
 
 ---
 

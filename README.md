@@ -1,4 +1,4 @@
-# Masters-Thesis: Sepsis Mortality Prediction
+# Sepsis Mortality Prediction with NLP — Master’s Thesis
 
 ![Python](https://img.shields.io/badge/python-3.11-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
@@ -288,7 +288,7 @@ This project is licensed under the MIT License.
 
 ---
 
-🙋 About Me
+## 🙋 About Me
 
 Built by Tyler Kelly
 

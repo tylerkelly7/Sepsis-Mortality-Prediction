@@ -6,37 +6,34 @@
 
 📘 **[Read the full thesis (PDF)](docs/Tyler%20Kelly%20Thesis.pdf)**
 
-
-
-## Motivation
-A reproducible machine learning pipeline for predicting ICU sepsis mortality using structured EHR data and clinical text from MIMIC-IV, developed as a Master’s thesis in Biostatistics.
-
-
-## Objective
-To develop, evaluate, and statistically compare machine learning models for predicting in-hospital mortality among ICU patients with sepsis using multi-modal electronic health record (EHR) data.
-
-
 ---
 
 ## 📌 Overview
-This repository contains my Master’s Thesis project in Biostatistics at the University of Pittsburgh.
 
-This work treats sepsis mortality prediction as a clinical risk stratification problem under class imbalance.
-Model selection and hyperparameter tuning are performed on non-resampled training data, followed by retraining on SMOTE-balanced data for final evaluation.
-This approach aligns with best practices for imbalanced clinical prediction tasks and is documented for reproducibility.
+This project was developed as a Master’s Thesis in Biostatistics at the University of Pittsburgh and focuses on ICU sepsis mortality prediction using EHR data and natural language processing of clinical text.
+
+
+### Motivation
+Sepsis remains a leading cause of mortality in intensive care units, motivating the need for reproducible and interpretable machine learning approaches to mortality prediction using routinely collected EHR data.
+
+### Objective
+The objective is to develop, evaluate, and statistically compare supervised machine learning models for predicting in-hospital mortality among ICU patients with sepsis using multi-modal EHR data from MIMIC-IV.
+
+### Project Summary
+
+This work frames sepsis mortality prediction as a binary classification task with class imbalance.
+Models are tuned on the original training data and subsequently retrained on SMOTE-balanced data for final evaluation on both resampling schemes.
 
 The pipeline integrates:
-- Cohort construction and feature extraction from MIMIC-IV (SQL)
-- Structured clinical feature engineering
+- Data ingestion and preprocessing using the cleaned MIMIC-IV–derived dataset released by [Gao et al.](https://github.com/yuyinglu2000/Sepsis-Mortality)
+- Unstructured clinical feature engineering
 - Clinical text representation using NLP embeddings (Word2Vec; experimental LLM extensions explored separately)
 - Supervised model training with and without SMOTE to address class imbalance
 - Rigorous evaluation using AUROC, calibration, and statistical testing
 - Reproducible experiment tracking and artifact logging (MLflow)
 - A lightweight API demonstration for inference (in progress)
 
-
 ---
-
 <!--
 - **Goal:** [Short description of the prediction or classification task]
 - **Dataset:** [Name + link if public; instructions if restricted]
@@ -67,7 +64,7 @@ The pipeline integrates:
 
 ## Methodology
 
-1. Cohort definition and outcome labeling using MIMIC-IV
+1. Outcome labeling and cohort definition using the cleaned MIMIC-IV–derived dataset released by Gao et al.
 2. Structured data preprocessing and normalization
 3. Clinical text embedding using Word2Vec as the primary thesis representation
 4. Model selection and hyperparameter tuning using repeated stratified cross-validation on non-resampled training data
@@ -123,6 +120,16 @@ This repository supports my Master’s Thesis defense by ensuring reproducibilit
 This repository is also intended for academic and educational purposes.
 Results should not be interpreted as clinical decision support without external validation.
 
+### 📊 Dataset Source
+
+The primary dataset used in this project is the cleaned MIMIC-IV–derived cohort released by Gao et al.:
+
+🔗 **Gao et al. — Sepsis Mortality Prediction Repository**  
+https://github.com/yuyinglu2000/Sepsis-Mortality
+
+Specifically, this work uses the cleaned dataset provided in `Data_after_Cleaning.csv`, with all downstream preprocessing, feature engineering, modeling, and evaluation performed in this repository.
+
+---
 
 ## 📂 Repo Structure
 ```bash
@@ -147,7 +154,7 @@ Masters-Thesis/
 │   └── archive/        # legacy notebooks + Rmd
 ├── src/                # reusable, testable pipeline modules (data, features, models, evaluation)
 ├── scripts/            # CLI and automation scripts
-├── sql/                # SQL queries for MIMIC-IV extraction
+├── sql/                # SQL utilities for extracting unstructured notes from MIMIC-IV
 ├── results/            # trained models and plots (gitignored)
 ├── mlflow_tracking/    # MLflow experiment logs (gitignored)
 ├── configs/            # experiment configs
@@ -158,6 +165,7 @@ Masters-Thesis/
 ├── environment.yml     # Conda environment
 └── README.md           # this file
 ```
+
 ---
 
 ## ⚙️ Setup Instructions
@@ -188,7 +196,7 @@ make eval
 
 ### Pipeline steps:
 
-1. Extract raw data from MIMIC-IV (via SQL)
+1. Extract raw notes data from MIMIC-IV (via SQL) and merge to the cleaned MIMIC-IV–derived dataset released by Gao et al.
 
 2. Clean & preprocess structured and text data
 

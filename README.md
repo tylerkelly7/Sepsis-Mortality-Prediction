@@ -4,6 +4,9 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Build](https://img.shields.io/badge/build-scaffolded-yellow)
 
+📘 **[Read the full thesis (PDF)](docs/Tyler%20Kelly%20Thesis.pdf)**
+
+
 
 ## Motivation
 A reproducible machine learning pipeline for predicting ICU sepsis mortality using structured EHR data and clinical text from MIMIC-IV, developed as a Master’s thesis in Biostatistics.

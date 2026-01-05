@@ -43,8 +43,6 @@ The pipeline integrates:
   - Interpretability: [e.g., SHAP feature importances]
   - Deployment: [Optional: Streamlit demo / API]
 
-
-
 ---
 
 -->
@@ -196,17 +194,21 @@ make eval
 
 ### Pipeline steps:
 
-1. Extract raw notes data from MIMIC-IV (via SQL) and merge to the cleaned MIMIC-IV–derived dataset released by Gao et al.
+1. Extract unstructured clinical notes from MIMIC-IV using SQL utilities and merge them with the cleaned MIMIC-IV–derived dataset released by Gao et al.
 
-2. Clean & preprocess structured and text data
+2. Clean and preprocess structured clinical variables and clinical text
 
-3. Engineer features (structured + embeddings)
+3. Generate NLP embeddings from clinical text
 
-4. Train models (Logistic Regression, Random Forest, Gradient Boosting, XGBoost, etc.)
+4. Train and tune machine learning models using cross-validation
 
-5. Evaluate models (AUROC, calibration, SHAP/feature importance)
+5. Retrain models on SMOTE-balanced training data
 
-6. Save model artifacts with MLflow
+6. Generate model performance metrics, feature attributions, and evaluation visualizations
+
+7. Log trained models, metrics, and artifacts using MLflow
+
+8. Perform formal statistical testing (e.g., DeLong tests) to compare AUROC performance across models
 
 ---
 <!--

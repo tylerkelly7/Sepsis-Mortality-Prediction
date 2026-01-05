@@ -291,6 +291,7 @@ This project is licensed under the MIT License.
 🙋 About Me
 
 Built by Tyler Kelly
+
 📧 Email: tylerjkelly77@gmail.com
 
 🔗 [LinkedIn](https://www.linkedin.com/in/tylerkelly7)  

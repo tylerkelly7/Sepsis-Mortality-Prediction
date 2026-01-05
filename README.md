@@ -294,6 +294,6 @@ Built by Tyler Kelly
 
 📧 Email: tylerjkelly77@gmail.com
 
-🔗 [LinkedIn](https://www.linkedin.com/in/tylerkelly7)  
+🔗 LinkedIn: [LinkedIn](https://www.linkedin.com/in/tylerkelly7)  
 
-🔗 [Portfolio](https://github.com/tylerkelly7)
+🔗 Portfolio: [Portfolio](https://github.com/tylerkelly7)
